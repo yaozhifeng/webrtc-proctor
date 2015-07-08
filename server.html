@@ -1,0 +1,50 @@
+<html>
+<head>
+  <title>PeerJS - Monitor</title>
+  <!-- <link rel="stylesheet" href="style.css"> -->
+  <script type="text/javascript" src="jquery-1.8.3.min.js"></script>
+  <script type="text/javascript" src="peer.js"></script>
+  <script>
+
+    // PeerJS object
+    var peer = new Peer({ key: 'lwjd5qra8257b9', debug: 3, config: {'iceServers': [
+      { url: 'stun:stun.l.google.com:19302' } // Pass in optional STUN and TURN server for maximum network compatibility
+    ]}});
+    
+    peer.on('call', function(mediaConn) {
+        mediaConn.on('stream', function(stream){
+            $('#my-video').prop('src', URL.createObjectURL(stream));
+        });
+        mediaConn.answer();
+    });
+
+    $(function(){
+        $("#conn").click(function(){
+            peer_id = $('#peer-id').val();
+            console.info(peer_id);
+            conn = peer.connect(peer_id);
+            console.info(conn);
+        });
+    });
+
+
+  </script>
+
+
+</head>
+
+<body>
+
+  <div class="pure-g">
+      <input type="text" id="peer-id"><button id='conn'>Connect</button>
+
+      <!-- Video area -->
+      <div class="pure-u-2-3" id="video-container">
+        <video id="my-video" muted="true" autoplay></video>
+      </div>
+
+  </div>
+
+
+</body>
+</html>
