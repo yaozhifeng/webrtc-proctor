@@ -1,6 +1,7 @@
 <html>
 <head>
   <title>PeerJS - Client side</title>
+  <meta charset="utf-8">
   <script type="text/javascript" src="jquery-1.8.3.min.js"></script>
   <script type="text/javascript" src="peer.js"></script>
   <script>
@@ -8,10 +9,41 @@
     // Compatibility shim
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
+    // This object will take in an array of XirSys STUN / TURN servers
+    // and override the original config object
+    var customConfig;
+  
+    // Call XirSys ICE servers
+    $.ajax({
+      url: "https://service.xirsys.com/ice",
+      data: {
+        ident: "yaozhifeng",
+        secret: "24161d72-2520-11e5-b500-d1d647416263",
+        domain: "eztest.cn",
+        application: "default",
+        room: "default",
+        secure: 1
+      },
+      success: function (data, status) {
+        // data.d is where the iceServers object lives
+        customConfig = data.d;
+        console.log(customConfig);
+      },
+      async: false
+    });
+  
+    console.info('stun server: ' + customConfig);
+    
     // PeerJS object
-    var peer = new Peer({ key: 'lwjd5qra8257b9', debug: 3, config: {'iceServers': [
-      { url: 'stun:stun.l.google.com:19302' } // Pass in optional STUN and TURN server for maximum network compatibility
-    ]}});
+    var peer = new Peer({
+      key: '5b04aiqai14kuik9',
+      debug: 3,
+      config: customConfig
+    });
+    // PeerJS object
+    // var peer = new Peer({ key: 'lwjd5qra8257b9', debug: 3, config: {'iceServers': [
+    //   { url: 'stun:stun.l.google.com:19302' } // Pass in optional STUN and TURN server for maximum network compatibility
+    // ]}});
 
     peer.on('open', function(){
       $('#my-id').text(peer.id);
@@ -23,6 +55,7 @@
     
     peer.on('connection', function(conn){
        //call monitor 
+        console.info('incomming connection: ' + conn.peer);
         peer.call(conn.peer, window.localStream);
     });
 
