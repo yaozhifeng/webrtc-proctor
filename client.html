@@ -13,11 +13,13 @@
     // PeerJS object
     var peer = new Peer(
         {
-            key: '5b04aiqai14kuik9',
+            host: "115.29.242.149",
+            port: 80,
+            path: "/",
             debug: 3,
             config: {
                 "iceServers": [{
-                    "url": "turn:121.40.170.186",
+                    "url": "turn:115.29.242.149",
                     "username": "eztest",
                     "credential": "eztest-pass-1234"
                 }]            
