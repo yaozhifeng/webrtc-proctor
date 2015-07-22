@@ -2,12 +2,10 @@
 <head>
   <title>PeerJS - Client side</title>
   <meta charset="utf-8">
+  <script type="text/javascript" src="adapter.js"></script>
   <script type="text/javascript" src="jquery-1.8.3.min.js"></script>
   <script type="text/javascript" src="peer.js"></script>
   <script>
-
-    // Compatibility shim
-    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
     
     // PeerJS object
@@ -49,7 +47,13 @@
 
     function init () {
       // Get audio/video stream
-      navigator.getUserMedia({audio: true, video: true}, function(stream){
+      navigator.getUserMedia({
+          audio: true, 
+          video: {
+              width: {min: 320, ideal: 640, max: 800},
+              height: {min: 240, ideal: 480, max: 600}
+          }
+      }, function(stream){
         // Set your video displays
         $('#my-video').prop('src', URL.createObjectURL(stream));
 
